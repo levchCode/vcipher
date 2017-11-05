@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Шифр</title>
+</head>
+<body>
+
+<h1>Шифр</h1>
+Введите ключ <input type="text" id="key">
+Введите текст <input type="text" id="text">
+Введите алфавит <input type="text" id="alph">
+<button onclick="cipher()">Шифровать</button>
+<button onclick="decipher()">Расшифровать</button>
+<p id="r"></p>
+
+
+<script>
+function searchStringInArray (str, strArray) 
+{
+    for (var j=0; j<strArray.length; j++) 
+    {
+        if (strArray[j].startsWith(str)) return j;
+    }
+    return -1;
+}
+
+function cipher(){
+	key = document.getElementById('key').value.toLocaleUpperCase()
+	txt = document.getElementById('text').value.toLocaleUpperCase()
+	
+
+	var alphabets = []
+	var result = ""
+	init_alphabet = document.getElementById('alph').value.toLocaleUpperCase()
+
+	if(init_alphabet === '')
+	{
+		for (var i = 1040; i < 1072; i++) {
+			init_alphabet += String.fromCharCode(i);
+		}
+	}
+	
+	alphabets.push(init_alphabet)
+
+	for (i = 0; i < key.length; i++) {
+		alphabets.push(key[i] + init_alphabet.split(key[i])[1] + init_alphabet.split(key[i])[0])
+	}
+
+	var aux = ""
+	for (i = 0; i < txt.length; i = i + key.length) {
+		aux += key;
+	}
+
+	aux = aux.substr(0, txt.length)
+
+	for (i = 0; i < txt.length; i++) {
+
+		var pos = alphabets[0].search(txt[i])
+		var line_pos = searchStringInArray(aux[i], alphabets)
+		result += alphabets[line_pos].charAt(pos)
+	}
+
+	document.getElementById('r').innerHTML = result
+}
+
+function decipher()
+{
+	key = document.getElementById('key').value.toLocaleUpperCase()
+	txt = document.getElementById('text').value.toLocaleUpperCase()
+
+	var alphabets = []
+	var init_alphabet = document.getElementById('alph').value.toLocaleUpperCase()
+	var result = ""
+
+	if(init_alphabet === '')
+	{
+		for (var i = 1040; i < 1072; i++) {
+			init_alphabet += String.fromCharCode(i);
+		}
+	}
+
+	alphabets.push(init_alphabet)
+
+	for (i = 0; i < key.length; i++) {
+		alphabets.push(key[i] + init_alphabet.split(key[i])[1] + init_alphabet.split(key[i])[0])
+	}
+
+	var aux = ""
+	for (i = 0; i < txt.length; i = i + key.length) {
+		aux += key;
+	}
+
+	aux = aux.substr(0, txt.length)
+
+	for (i = 0; i < txt.length; i++) 
+	{
+		var line_pos = searchStringInArray(aux[i], alphabets)
+		var pos = alphabets[line_pos].search(txt[i])
+		result += alphabets[0].charAt(pos)
+	}
+
+	document.getElementById('r').innerHTML = result
+}
+</script>
+
+</body>
+</html>
